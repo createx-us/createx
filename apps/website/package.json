@@ -1,0 +1,16 @@
+{
+  "name": "@createx/website",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "node --experimental-strip-types src/build.ts",
+    "dev": "node ../../scripts/serve.mjs"
+  },
+  "dependencies": {
+    "@createx/brand": "*"
+  },
+  "devDependencies": {
+    "wrangler": "^4.155.0"
+  }
+}

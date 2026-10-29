@@ -1,0 +1,31 @@
+{
+  "name": "createx-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspace @createx/website",
+    "dev": "npm run dev --workspace @createx/website",
+    "lint": "eslint apps/website/src/app.js scripts/*.mjs apps/website/test/*.mjs eslint.config.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test apps/website/test/*.test.mjs",
+    "check": "npm run lint && npm run typecheck && npm run build && npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "@types/node": "^22.0.0",
+    "eslint": "^9.39.5",
+    "globals": "^17.13.0",
+    "jsdom": "^30.1.3",
+    "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.18.0"
+  }
+}
