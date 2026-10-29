@@ -7,3 +7,5 @@
 验收：独立预览完整28/28检查通过：14页、8份公开下载、严格TLS、CSP/nosniff、版本2026.10.29.1、字节一致、根重定向、尾斜杠及两类404。源码远程SHA已验证；完整预览核验另存preview-verification.json。
 
 缺口/未通过：指定域名绑定因Cloudflare 100117旧A冲突失败，最小OAuth对DNS读取403；旧DNS未修改。实际createx.us仍是旧站且TLS证书不匹配。真实中英文手机/中文桌面/显式下载验收未完成。第10轮有实际实现与检查记录，但生产域名验收状态为阻塞，不能称十轮全部验收或最终交付完成。
+
+继续改进：从Custom Domain替换方案改成保留旧A的两个精确Worker Routes，已经实际部署并经API确认，版本（部署标识保留在本地运维记录）。边缘IP覆盖测试验证精确createx.us/www主机名，不跳过TLS；完整回执另存domain-edge-verification.json。当前只剩将两个旧A的Proxy status开启；不必删除记录或新增token。公共DNS验收仍未通过，不能用边缘覆盖测试代替。

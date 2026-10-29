@@ -1,13 +1,18 @@
 {
   "$schema": "../../node_modules/wrangler/config-schema.json",
   "name": "createx-web",
-  "account_id": "cc39c0447db8c730182cfd075fe91bf7",
   "compatibility_date": "2026-10-29",
   "workers_dev": true,
   "preview_urls": false,
   "routes": [
-    { "pattern": "createx.us", "custom_domain": true },
-    { "pattern": "www.createx.us", "custom_domain": true }
+    {
+      "pattern": "createx.us/*",
+      "zone_name": "createx.us",
+    },
+    {
+      "pattern": "www.createx.us/*",
+      "zone_name": "createx.us",
+    },
   ],
   "assets": {
     "directory": "./dist",
