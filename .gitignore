@@ -15,3 +15,10 @@ artifacts/screenshots/
 documents/资料包/
 documents/markdown/
 documents/markdown-v0.3/
+
+generated_images/
+
+/createx documents.zip
+*.sqlite
+*.sqlite3
+*.db

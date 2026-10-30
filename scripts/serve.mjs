@@ -1,14 +1,33 @@
 import { createServer } from "node:http";
 import { readFile, stat } from "node:fs/promises";
 import { resolve, extname } from "node:path";
+import { parseArgs } from "node:util";
+const { values } = parseArgs({
+  options: {
+    host: { type: "string", default: "127.0.0.1" },
+    port: { type: "string", default: "4173" },
+  },
+});
+const host = values.host;
+const port = Number(values.port);
+if (
+  !["127.0.0.1", "localhost", "0.0.0.0", "::1"].includes(host) ||
+  !Number.isInteger(port) ||
+  port < 1 ||
+  port > 65535
+)
+  throw Error("Invalid preview host or port");
 const base = resolve(import.meta.dirname, "../apps/website/dist");
 const types = {
   ".html": "text/html; charset=utf-8",
   ".css": "text/css; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".svg": "image/svg+xml",
+  ".png": "image/png",
+  ".webp": "image/webp",
   ".txt": "text/plain; charset=utf-8",
   ".xml": "application/xml",
+  ".json": "application/json; charset=utf-8",
 };
 createServer(async (req, res) => {
   try {
@@ -44,6 +63,8 @@ createServer(async (req, res) => {
     res.writeHead(400);
     res.end("Bad request");
   }
-}).listen(4173, "127.0.0.1", () =>
-  console.log("CreateX preview: http://127.0.0.1:4173"),
+}).listen(port, host, () =>
+  console.log(
+    `CreateX preview: http://${host === "::1" ? "[::1]" : host}:${port}`,
+  ),
 );

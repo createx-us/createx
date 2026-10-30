@@ -37,7 +37,8 @@ test("every internal link, asset and fragment resolves to a real target", async 
       const html = await load(lang, page);
       for (const [, ref] of html.matchAll(/(?:href|src)="([^"<>]+)"/g)) {
         if (!ref.startsWith("/") && !ref.startsWith("#")) continue;
-        const [path, fragment] = ref.split("#");
+        const [pathWithQuery, fragment] = ref.split("#");
+        const path = pathWithQuery.split("?")[0];
         let file = path
           ? resolve(dist, "." + path)
           : resolve(dist, lang, page, "index.html");
@@ -112,6 +113,7 @@ test("release directory contains only website assets and no private source mater
     "sitemap.xml",
     "assets",
     "downloads",
+    "data",
     "en",
     "zh",
   ]);
@@ -166,7 +168,10 @@ test("semantic headings, labels, IDs and page-specific descriptions are valid", 
   assert.equal(image.width, 1200);
   assert.equal(image.height, 630);
 });
-test("reading and action colors meet WCAG AA normal-text contrast", () => {
+test("reading and action colors meet WCAG AA normal-text contrast", async () => {
+  const css = await readFile(resolve(dist, "assets/styles.css"), "utf8");
+  const token = (name) =>
+    css.match(new RegExp(`--${name}:\\s*(#[0-9a-fA-F]{6})`))[1].slice(1);
   const luminance = (hex) => {
     const rgb = hex
       .match(/\w\w/g)
@@ -175,11 +180,13 @@ test("reading and action colors meet WCAG AA normal-text contrast", () => {
     return rgb[0] * 0.2126 + rgb[1] * 0.7152 + rgb[2] * 0.0722;
   };
   for (const [fg, bg] of [
-    ["1b201c", "f4f1e9"],
-    ["585f55", "f4f1e9"],
-    ["bc3b1c", "f4f1e9"],
-    ["fffdf7", "bc3b1c"],
-    ["c0c5b9", "1b201c"],
+    [token("ink"), token("paper")],
+    [token("muted"), token("paper")],
+    [token("accent"), token("paper")],
+    [token("white"), token("accent")],
+    [token("ink"), token("wash")],
+    [token("accent"), token("wash")],
+    ["d4ebee", token("ink")],
   ]) {
     const values = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
     const ratio = (values[0] + 0.05) / (values[1] + 0.05);

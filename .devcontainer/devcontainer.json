@@ -1,0 +1,10 @@
+{
+  "name": "CreateX development",
+  "image": "node:22-bookworm",
+  "remoteUser": "node",
+  "postCreateCommand": "npm run cloud:setup",
+  "forwardPorts": [4173],
+  "portsAttributes": {
+    "4173": { "label": "CreateX local preview", "onAutoForward": "notify" }
+  }
+}

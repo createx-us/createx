@@ -10,10 +10,12 @@
   "scripts": {
     "build": "npm run build --workspace @createx/website",
     "dev": "npm run dev --workspace @createx/website",
-    "lint": "eslint apps/website/src/app.js scripts/*.mjs apps/website/test/*.mjs eslint.config.mjs",
+    "lint": "eslint apps/website/src/*.js scripts/*.mjs apps/website/test/*.mjs eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test apps/website/test/*.test.mjs",
-    "check": "npm run lint && npm run typecheck && npm run build && npm test"
+    "check": "npm run lint && npm run typecheck && npm run build && npm test",
+    "dev:cloud": "node scripts/serve.mjs --host 0.0.0.0 --port 4173",
+    "cloud:setup": "sh scripts/cloud-setup.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.5",
