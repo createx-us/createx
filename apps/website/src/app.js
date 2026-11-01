@@ -124,3 +124,12 @@ function revealFragment() {
 }
 revealFragment();
 window.addEventListener("hashchange", revealFragment);
+
+// A GIS interest handoff prefills only the local draft; it is never sent silently.
+if (form) {
+  const params = new URLSearchParams(window.location.search);
+  const city = params.get("city");
+  if (city) form.elements.namedItem("city").value = city.slice(0, 100);
+  if (params.get("intent") === "chapter")
+    form.elements.namedItem("role").value = "2";
+}

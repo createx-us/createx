@@ -35,15 +35,16 @@ export const copy = {
       "Governance",
       "Resources",
     ],
-    title: "Make the future.\nTogether.",
-    eyebrow: "A NETWORK FOR COLLECTIVE POSSIBILITY",
+    title: "AI × Design Thinking.\nReal change, together.",
+    eyebrow: "AI × DESIGN THINKING / LOCAL COMMUNITIES",
     description:
-      "Real problems. Different perspectives. Shared progress. CreateX brings people together to turn AI and design thinking into meaningful action—one workshop, one project, one city at a time.",
-    heroNote: "A city-based innovation culture & practice network",
+      "Education is changing. Work is changing. Our communities need ways to respond together. CreateX combines human-centered design thinking with AI to understand real needs, prototype ideas, and test solutions through local workshops and projects.",
+    heroNote:
+      "Human-centered questions. AI-assisted exploration. Real-world evidence.",
     mapCaption: "A possible network, built through local trust.",
     mapNote: "Concept illustration · not a map of active chapters",
     whyLabel: "01 / WHY WE EXIST",
-    whyTitle: "More tools.\nNow, more collective capacity.",
+    whyTitle: "The AI era changes how we learn,\nwork, and live together.",
     whyText:
       "AI expands what we can make. Progress still depends on our ability to ask better questions, think together, and test ideas in the real world. CreateX is a place to practice that—across disciplines, organizations, and cities.",
     principles: [
@@ -424,17 +425,17 @@ export const copy = {
       "治理与边界",
       "资料与问答",
     ],
-    title: "把可能，\n一起做成现实。",
-    eyebrow: "连接每一份共创的可能",
+    title: "AI × 设计思维，\n共解身边的真实问题。",
+    eyebrow: "AI × DESIGN THINKING / 本地社区",
     description:
-      "真实问题，多元视角，共同向前。CreateX 连接不同领域的人，让 AI 与设计思维成为行动的力量。从一场工作坊、一个项目，到一座城市的持续实践。",
-    heroNote: "以城市为起点的创新文化与实践网络",
+      "AI 正在改变教育、工作与社区生活。CreateX 将以人为本的设计思维与 AI 融合，让不同背景的人在本地相遇：理解真实需要、共同制作原型，并在工作坊和项目中验证解决方案。",
+    heroNote: "以人的需要为起点，以 AI 辅助探索，以真实反馈验证。",
     mapCaption: "让本地的信任，连接更远的可能。",
     mapNote: "网络概念示意 · 不代表已开通城市",
     whyLabel: "01 / 为什么需要 CREATE X",
-    whyTitle: "工具越来越多，\n我们更需要一起创造的能力。",
+    whyTitle: "面对 AI 时代的变化，\n一起学习、工作与解决问题。",
     whyText:
-      "AI 拓展了创造的边界。真正的进步，仍需要我们提出更好的问题、形成共同理解，并把想法放到真实世界检验。CreateX 让这种能力在跨学科、跨组织、跨城市的协作中持续生长。",
+      "教育需要重新思考学什么、怎样学；工作需要重新分配人与 AI 的任务；社区需要让技术回应真实生活。设计思维帮助我们理解人的需要和判断价值，AI 帮助探索、整理和快速制作原型，真实反馈决定下一步。",
     principles: [
       ["从真实需要出发", "先倾听与问题最接近的人，再决定采用什么方案。"],
       [
