@@ -22,3 +22,6 @@ generated_images/
 *.sqlite
 *.sqlite3
 *.db
+
+# Disposable cloud verification caches
+.cache/
