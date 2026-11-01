@@ -22,6 +22,17 @@ if (finder) {
     map,
     markerLayer,
     selectedCity = "";
+  const cityFromURL = () =>
+    (new URL(window.location.href).searchParams.get("city") || "")
+      .trim()
+      .slice(0, 100);
+  function restoreCity() {
+    selectedCity = cityFromURL();
+    cityInput.value = selectedCity;
+    render();
+  }
+  window.addEventListener("popstate", restoreCity);
+  window.addEventListener("pageshow", restoreCity);
   const L = window.L;
   const text = (tag, value) => {
     const e = document.createElement(tag);
@@ -126,6 +137,12 @@ if (finder) {
   finder.querySelector("[data-city-search]").addEventListener("submit", (e) => {
     e.preventDefault();
     selectedCity = cityInput.value.trim().slice(0, 100);
+    cityInput.value = selectedCity;
+    const url = new URL(window.location.href);
+    if (selectedCity) url.searchParams.set("city", selectedCity);
+    else url.searchParams.delete("city");
+    if (url.href !== window.location.href)
+      window.history.pushState(window.history.state, "", url);
     render();
   });
   finder.querySelector("[data-load-map]").addEventListener("click", () => {
@@ -173,6 +190,6 @@ if (finder) {
         : "The directory is temporarily unavailable. Please try again later.";
     }
   }
-  render();
+  restoreCity();
   load();
 }

@@ -7,13 +7,13 @@ import { JSDOM } from "jsdom";
 // Synthetic fixtures only: these tests do not establish real community listings.
 const dist = resolve(import.meta.dirname, "../dist");
 const script = await readFile(resolve(dist, "assets/community.js"), "utf8");
-async function setup(lang, responses) {
+async function setup(lang, responses, suffix = "") {
   const html = await readFile(
     resolve(dist, lang, "chapters/index.html"),
     "utf8",
   );
   const dom = new JSDOM(html, {
-    url: `https://createx.us/${lang}/chapters/`,
+    url: `https://createx.us/${lang}/chapters/${suffix}`,
     runScripts: "outside-only",
   });
   const calls = [];
@@ -140,6 +140,101 @@ test("directory request failure reports unavailability without inventing communi
       d
         .querySelector("[data-community-results]")
         .textContent.includes("尚无已核实"),
+    );
+  } finally {
+    dom.window.close();
+  }
+});
+
+test("city query survives page reconstruction and restores on Back/Forward without duplicate entries", async () => {
+  const { dom, d, search } = await setup(
+    "en",
+    [json([])],
+    "?source=test#explore",
+  );
+  const w = dom.window;
+  const traverse = (direction) =>
+    new Promise((resolve, reject) => {
+      const timer = setTimeout(
+        () => reject(new Error("Missing popstate")),
+        1000,
+      );
+      w.addEventListener(
+        "popstate",
+        () => {
+          clearTimeout(timer);
+          resolve();
+        },
+        { once: true },
+      );
+      w.history[direction]();
+    });
+  try {
+    search("Shanghai");
+    const firstURL = w.location.href;
+    const firstLength = w.history.length;
+    search("Shanghai");
+    assert.equal(w.history.length, firstLength);
+    search("北京 & <City>");
+    assert.equal(new URL(w.location.href).searchParams.get("source"), "test");
+    assert.equal(w.location.hash, "#explore");
+    await traverse("back");
+    assert.equal(w.location.href, firstURL);
+    assert.equal(d.querySelector("#city-search").value, "Shanghai");
+    assert.ok(
+      d
+        .querySelector("[data-community-results]")
+        .textContent.includes("Shanghai"),
+    );
+    await traverse("forward");
+    assert.equal(d.querySelector("#city-search").value, "北京 & <City>");
+    // Simulate browser-restored form values on a BFCache pageshow.
+    d.querySelector("#city-search").value = "stale";
+    w.dispatchEvent(new w.Event("pageshow"));
+    assert.equal(d.querySelector("#city-search").value, "北京 & <City>");
+    const fresh = await setup(
+      "en",
+      [json([])],
+      w.location.search + w.location.hash,
+    );
+    try {
+      assert.equal(
+        fresh.d.querySelector("#city-search").value,
+        "北京 & <City>",
+      );
+      assert.equal(fresh.d.querySelectorAll(".community-card").length, 0);
+      assert.equal(
+        new URL(
+          fresh.d.querySelector("[data-community-results] a").href,
+        ).searchParams.get("city"),
+        "北京 & <City>",
+      );
+    } finally {
+      fresh.dom.window.close();
+    }
+  } finally {
+    w.close();
+  }
+});
+
+test("URL city input is bounded and an empty history entry restores the initial state", async () => {
+  const { dom, d, search } = await setup(
+    "zh",
+    [json([])],
+    "?city=" + "a".repeat(150),
+  );
+  try {
+    assert.equal(d.querySelector("#city-search").value.length, 100);
+    search("");
+    assert.equal(
+      new URL(dom.window.location.href).searchParams.has("city"),
+      false,
+    );
+    assert.equal(d.querySelector("#city-search").value, "");
+    assert.ok(
+      d
+        .querySelector("[data-community-results]")
+        .textContent.includes("先选择"),
     );
   } finally {
     dom.window.close();
