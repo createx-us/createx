@@ -193,3 +193,24 @@ test("reading and action colors meet WCAG AA normal-text contrast", async () => 
     assert.ok(ratio >= 4.5, `${fg}/${bg}: ${ratio}`);
   }
 });
+
+test("Chinese homepage uses the revised clear invitation without claiming existing community scale", async () => {
+  const html = await load("zh", "");
+  const dom = new JSDOM(html);
+  try {
+    assert.equal(
+      dom.window.document.querySelector("h1").textContent,
+      "AI × 设计思维，一起解决身边的真实问题。",
+    );
+    assert.ok(
+      html.includes(
+        "CreateX 让不同背景的人走到一起，用设计思维理解需求，用 AI 探索创意，通过工作坊和本地项目，把想法变成解决方案。",
+      ),
+    );
+    assert.ok(html.includes("从人的需要出发，用 AI 探索，用实践验证。"));
+    assert.ok(!html.includes("共解身边的真实问题"));
+    assert.ok(html.includes("这是努力的方向，不是已经实现的规模。"));
+  } finally {
+    dom.window.close();
+  }
+});
