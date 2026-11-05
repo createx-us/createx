@@ -1,4 +1,5 @@
 import sharp from "sharp";
+import { challengeModel } from "./challenge-model.ts";
 import { mkdir, readFile, writeFile, rm } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
@@ -58,9 +59,11 @@ const sections: Record<
     ["workshop", "Workshop OS", "工作坊路径"],
     ["project", "Action learning", "行动学习"],
     ["outcomes", "Outcomes", "成果验收"],
+    ["challenges", "Challenge pathway", "挑战协作"],
   ],
   chapters: [
     ["explore", "Find a community", "找到社区"],
+    ["network", "Local and global", "本地与全球"],
     ["roles", "The team", "职能分工"],
     ["pilot", "90-day pilot", "90天试点"],
     ["checklist", "Before starting", "启动检查"],
@@ -73,6 +76,7 @@ const sections: Record<
     ["collaborate", "Ways to collaborate", "合作方式"],
     ["sponsor", "Sponsorship", "赞助边界"],
     ["brief", "The brief", "需求简表"],
+    ["challenge-partners", "Enterprise and university", "企业与大学"],
   ],
   governance: [
     ["structure", "Structure", "治理结构"],
@@ -96,7 +100,41 @@ function roleList(l: Language, full = false) {
 }
 function home(l: Language) {
   const c = copy[l];
-  return `<section class="hero container" id="top"><div class="hero-copy"><p class="eyebrow">${c.eyebrow}</p><h1>${lines(c.title)}</h1><p>${c.description}</p><div class="hero-actions">${anchor(l === "zh" ? "找到本地社区" : "Find your local community", url(l, "chapters") + "#explore", "button primary")}${anchor(c.explore, url(l, "practice"))}</div><p class="hero-note">${c.heroNote}</p></div><figure class="hero-visual">${heroArtwork(l)}</figure></section><nav class="brand-path container" aria-label="${l === "zh" ? "探索 CreateX" : "Explore CreateX"}"><a href="#why"><span>01 / WHY</span><strong>${l === "zh" ? "为什么，一起创造" : "Why we create together"}</strong></a><a href="#practice"><span>02 / HOW</span><strong>${l === "zh" ? "从想法，走向实践" : "From ideas to practice"}</strong></a><a href="#cities"><span>03 / WHERE</span><strong>${l === "zh" ? "扎根本地，连接彼此" : "Local roots, shared learning"}</strong></a></nav>${section("why", heading(c.whyLabel, c.whyTitle) + `<div class="split"><p class="lead">${c.whyText}</p><div class="panel accent"><p class="eyebrow">INFORMATION × SPACE × RELATIONSHIP</p><h3>${l === "zh" ? "让知识、空间与关系，形成持续的创新现场。" : "Knowledge, space, and relationships—a place for possibility to take shape."}</h3><p>${c.heroNote}</p></div></div><div class="principles">${c.principles.map((r, i) => `<article class="principle"><span class="step-number">0${i + 1}</span><h3>${r[0]}</h3><p>${r[1]}</p></article>`).join("")}</div>`)}${section("practice", heading(c.howLabel, c.howTitle, c.howText) + `<div class="path">${c.homeSteps.map((r, i) => `<article class="path-step"><span class="step-number">0${i + 1}</span><h3>${r[0]}</h3><p>${r[1]}</p></article>`).join("")}</div>${anchor(c.explore, url(l, "practice"))}`)}${section("cities", heading(c.cityLabel, c.cityTitle, c.cityText) + `<div class="panel dark"><p class="eyebrow">${c.vision}</p><h2>${lines(c.visionTitle)}</h2><p>${c.visionNote}</p>${anchor(c.cityLink, url(l, "chapters"))}</div>`)}${section("roles", heading(c.rolesLabel, c.rolesTitle, c.rolesText) + roleList(l) + anchor(c.viewRoles, url(l, "join")))}${cta(l)}`;
+  return `<section class="hero container" id="top"><div class="hero-copy"><p class="eyebrow">${c.eyebrow}</p><h1>${lines(c.title)}</h1><p>${c.description}</p><div class="hero-actions">${anchor(l === "zh" ? "找到本地社区" : "Find your local community", url(l, "chapters") + "#explore", "button primary")}${anchor(c.explore, url(l, "practice"))}</div><p class="hero-note">${c.heroNote}</p></div><figure class="hero-visual">${heroArtwork(l)}</figure></section><nav class="brand-path container" aria-label="${l === "zh" ? "探索 CreateX" : "Explore CreateX"}"><a href="#why"><span>01 / WHY</span><strong>${l === "zh" ? "为什么，一起创造" : "Why we create together"}</strong></a><a href="#practice"><span>02 / HOW</span><strong>${l === "zh" ? "从想法，走向实践" : "From ideas to practice"}</strong></a><a href="#cities"><span>03 / WHERE</span><strong>${l === "zh" ? "扎根本地，连接彼此" : "Local roots, shared learning"}</strong></a></nav>${section("why", heading(c.whyLabel, c.whyTitle) + `<div class="split"><p class="lead">${c.whyText}</p><div class="panel accent"><p class="eyebrow">INFORMATION × SPACE × RELATIONSHIP</p><h3>${l === "zh" ? "让知识、空间与关系，形成持续的创新现场。" : "Knowledge, space, and relationships—a place for possibility to take shape."}</h3><p>${c.heroNote}</p></div></div><div class="principles">${c.principles.map((r, i) => `<article class="principle"><span class="step-number">0${i + 1}</span><h3>${r[0]}</h3><p>${r[1]}</p></article>`).join("")}</div>`)}${section("practice", heading(c.howLabel, c.howTitle, c.howText) + `<div class="path">${c.homeSteps.map((r, i) => `<article class="path-step"><span class="step-number">0${i + 1}</span><h3>${r[0]}</h3><p>${r[1]}</p></article>`).join("")}</div>${anchor(c.explore, url(l, "practice"))}${anchor(l === "zh" ? "了解挑战协作路径" : "Explore the challenge pathway", url(l, "practice") + "#challenges")}`)}${section("cities", heading(c.cityLabel, c.cityTitle, c.cityText) + `<div class="panel dark"><p class="eyebrow">${c.vision}</p><h2>${lines(c.visionTitle)}</h2><p>${c.visionNote}</p>${anchor(c.cityLink, url(l, "chapters"))}</div>`)}${section("roles", heading(c.rolesLabel, c.rolesTitle, c.rolesText) + roleList(l) + anchor(c.viewRoles, url(l, "join")))}${cta(l)}`;
+}
+function challengePath(l: Language) {
+  const m = challengeModel[l];
+  return section(
+    "challenges",
+    heading("CHALLENGE TO IMPACT / PROPOSAL", m.title, m.intro) +
+      cards(m.steps) +
+      `<aside class="boundary"><p>${esc(m.accountability)}</p></aside>` +
+      anchor(m.action, url(l, "partners") + "#challenge-partners"),
+  );
+}
+function communityNetwork(l: Language) {
+  const m = challengeModel[l];
+  return section(
+    "network",
+    heading("LOCAL ROOTS / GLOBAL CONNECTIONS", m.cityTitle, m.cityIntro) +
+      cards(m.environments) +
+      `<p class="privacy-note">${esc(m.globalNote)}</p>` +
+      anchor(m.globalAction, url(l, "join") + "#application"),
+  );
+}
+function challengePartners(l: Language) {
+  const m = challengeModel[l];
+  return section(
+    "challenge-partners",
+    heading(
+      "ENTERPRISE × UNIVERSITY / PROPOSAL",
+      m.partnerTitle,
+      m.partnerIntro,
+    ) +
+      cards(m.modes) +
+      `<div class="panel"><h3>${l === "zh" ? "大学问题导向学习" : "University problem-based learning"}</h3><p>${esc(m.university)}</p></div><aside class="boundary"><p>${esc(m.pilot)}</p></aside>` +
+      anchor(m.action, `/downloads/createx-collaboration-${l}.txt`),
+  );
 }
 function practice(l: Language) {
   const c = copy[l];
@@ -116,6 +154,7 @@ function practice(l: Language) {
       "outcomes",
       `<div class="split"><h2>${c.doneTitle}</h2><p class="lead">${c.doneText}</p></div>`,
     ) +
+    challengePath(l) +
     cta(l)
   );
 }
@@ -131,6 +170,7 @@ function chapters(l: Language) {
   return (
     pageHero(l, "chapters", c.chaptersTitle, c.chaptersIntro) +
     communityFinder(l) +
+    communityNetwork(l) +
     section(
       "roles",
       heading(
@@ -195,6 +235,7 @@ function partners(l: Language) {
       "brief",
       `<div class="split"><div><h2>${c.partnerChecklistTitle}</h2>${anchor(c.resourceDownload, `/downloads/createx-collaboration-${l}.txt`)}</div>${list(c.partnerChecklist)}</div>`,
     ) +
+    challengePartners(l) +
     cta(l)
   );
 }
@@ -354,7 +395,7 @@ for (const l of languages) {
       .map((x) => x + ": ____________________")
       .join("\n\n")}\n\n${c.joinBoundary}\n\n${c.privacy}`,
     `${c.resources[2][0]}\n\n${c.launchIntro}\n\n${c.chapterFunctions.map((r) => r.join(": ")).join("\n")}\n\n${c.startup.map((x) => "[ ] " + x).join("\n")}\n\n${c.launch.map((r) => r.join("\n")).join("\n\n")}\n\n${c.autonomyText}`,
-    `${c.resources[3][0]}\n\n${c.partnersIntro}\n\n${c.partnerChecklist.map((x) => x + ": ____________________").join("\n\n")}\n\n${c.sponsorText}\n\n${c.joinBoundary}`,
+    `${c.resources[3][0]}\n\n${c.partnersIntro}\n\n${c.partnerChecklist.map((x) => x + ": ____________________").join("\n\n")}\n\n${c.sponsorText}\n\n${c.joinBoundary}\n\n${challengeModel[l].title}\n${challengeModel[l].intro}\n\n${challengeModel[l].briefFields.map((field) => field + ": ____________________").join("\n\n")}`,
   ];
   for (let i = 0; i < resourceSlugs.length; i++)
     await writeFile(

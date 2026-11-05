@@ -1,7 +1,7 @@
 export const brand = {
   name: "CreateX",
   origin: "https://createx.us",
-  version: "2026.11.02.1",
+  version: "2026.11.05.1",
   colors: {
     paper: "#fafaf7",
     ink: "#005c7a",

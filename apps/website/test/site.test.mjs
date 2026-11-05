@@ -214,3 +214,66 @@ test("Chinese homepage uses the revised clear invitation without claiming existi
     dom.window.close();
   }
 });
+
+test("challenge proposal connects local/global practice without claiming a live platform or partnership", async () => {
+  for (const lang of langs) {
+    const practice = new JSDOM(await load(lang, "practice")).window.document;
+    const chapters = new JSDOM(await load(lang, "chapters")).window.document;
+    const partners = new JSDOM(await load(lang, "partners")).window.document;
+    const pathway = practice.querySelector("#challenges");
+    assert.equal(pathway.querySelectorAll("article").length, 6);
+    assert.match(pathway.textContent, /D-Challenger/);
+    assert.match(
+      pathway.textContent,
+      lang === "zh" ? /挑战平台尚未上线/ : /challenge platform is not live/,
+    );
+    assert.match(
+      pathway.textContent,
+      lang === "zh" ? /人负责确认/ : /people confirm/,
+    );
+    const network = chapters.querySelector("#network");
+    assert.equal(network.querySelectorAll("article").length, 3);
+    for (const term of lang === "zh"
+      ? ["非营利", "企业", "公共机构", "大学", "居民", "全球"]
+      : [
+          "nonprofits",
+          "companies",
+          "public agencies",
+          "universities",
+          "residents",
+          "Global",
+        ])
+      assert.ok(network.textContent.includes(term), term);
+    assert.ok(network.querySelector(`a[href="/${lang}/join/#application"]`));
+    const collaboration = partners.querySelector("#challenge-partners");
+    assert.equal(collaboration.querySelectorAll("article").length, 3);
+    assert.match(collaboration.textContent, /12–16/);
+    assert.match(
+      collaboration.textContent,
+      lang === "zh"
+        ? /课程通过不等于方案已被采用/
+        : /Passing a course does not mean a solution has been adopted/,
+    );
+    assert.ok(
+      collaboration.querySelector(
+        `a[href="/downloads/createx-collaboration-${lang}.txt"]`,
+      ),
+    );
+    const brief = await readFile(
+      resolve(dist, `downloads/createx-collaboration-${lang}.txt`),
+      "utf8",
+    );
+    assert.match(
+      brief,
+      lang === "zh"
+        ? /接收机构及实施决策人/
+        : /Adopting organization and implementation decision owner/,
+    );
+    assert.match(
+      brief,
+      lang === "zh" ? /可见范围：内部/ : /Visibility: internal/,
+    );
+    const home = new JSDOM(await load(lang, "")).window.document;
+    assert.ok(home.querySelector(`a[href="/${lang}/practice/#challenges"]`));
+  }
+});
